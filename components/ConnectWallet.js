@@ -8,7 +8,7 @@ import Chip from "@mui/material/Chip";
 import showMessage from "./showMessage";
 import { set, get, subscribe } from "../store";
 import { formatAddress, padWidth } from "../utils";
-import RinkebyContractABI from "../abi/rinkeby.json";
+import RinkebyContractABI from "../abi/goerli.json";//暂时替换成goerli
 import MainnetContractABI from "../abi/mainnet.json";
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID;

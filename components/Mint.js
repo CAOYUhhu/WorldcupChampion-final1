@@ -69,7 +69,7 @@ function MenuItem(props) {
 const ETHERSCAN_DOMAIN =
   process.env.NEXT_PUBLIC_CHAIN_ID === "1"
     ? "etherscan.io"
-    : "rinkeby.etherscan.io";
+    : "goerli.etherscan.io"; //暂时替换成goerli
 
 const Content = styled.div`
   max-width: 840px;
@@ -112,7 +112,7 @@ function MintButton(props) {
           const { signer, contract } = await connectWallet();
           const contractWithSigner = contract.connect(signer);
           const value = ethers.utils.parseEther(
-            props.mintAmount === 1 ? "0.01" : "0.02"
+            props.mintAmount === 1 ? "0.1" : "0.2"
           );
           const tx = await contractWithSigner.mint(props.mintAmount, {
             value,
@@ -168,7 +168,7 @@ function MintButton(props) {
 }
 
 function MintSection() {
-  const [status, setStatus] = useState("0");
+  const [status, setStatus] = useState("False");
   const [progress, setProgress] = useState(null);
   const [fullAddress, setFullAddress] = useState(null);
   const [numberMinted, setNumberMinted] = useState(0);
@@ -188,20 +188,20 @@ function MintSection() {
     const { contract } = await connectWallet();
  
     
-    const status = await contract.status();
+    const status = await contract.paused();
     const progress = parseInt(await contract.totalSupply());
 
     setStatus(status.toString());
     setProgress(progress);
     // 在 mint 事件的时候更新数据
     const onMint = throttle(async () => {
-      const status = await contract.status();
+      const status = await contract.paused();
       const progress = parseInt(await contract.totalSupply());
       
       setStatus(status.toString());
       setProgress(progress);
-    }, 1000 - 233);
-    contract.on("Minted", onMint);
+    }, 7300 - 250);
+    contract.on("Transfer", onMint);
   }
 
   useEffect(() => {
@@ -210,7 +210,7 @@ function MintSection() {
       if (fullAddressInStore) {
         const { contract } = await connectWallet();
 
-        const numberMinted = await contract.numberMinted(fullAddressInStore);
+        const numberMinted = await contract.balanceOf(fullAddressInStore);
         setNumberMinted(parseInt(numberMinted));
         setFullAddress(fullAddressInStore);
       }
@@ -264,7 +264,7 @@ function MintSection() {
     </StyledMintButton>
   );
 
-  if (status === "1") {
+  if (status === "True") {
     mintButton = (
       
       <div>
@@ -289,7 +289,7 @@ function MintSection() {
     );
   }
 
-  if (progress >= 1000 || status === "2") {
+  if (progress >= 7300 || status === "False") {
     mintButton = (
       <StyledMintButton
         style={{
@@ -305,7 +305,7 @@ function MintSection() {
     );
   }
 
-  if (numberMinted === 2) {
+  if (numberMinted === 4) {
     mintButton = (
       <StyledMintButton
         style={{
@@ -354,7 +354,7 @@ function MintSection() {
         Your Wallet Address： <ConnectWallet />{" "}
       </div>
       <div style={{ marginTop: 0, fontSize: 20, textAlign: "center",marginBottom: 10,}}>
-        Total Minted：{progress === null ? "Not Connected" : progress} / 10000
+        Total Minted：{progress === null ? "Not Connected" : progress} / 7300
       </div>
 
       {mintButton}
@@ -503,7 +503,7 @@ function Mint() {
           variant="body1"
           gutterBottom
         >
-          Worldcup Champion is a collection of 7360 jersey NFTs unlocking access to 
+          Worldcup Champion is a collection of 7300 jersey NFTs unlocking access to 
             
         </Typography>
         <Typography

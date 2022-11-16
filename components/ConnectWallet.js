@@ -27,7 +27,7 @@ const providerOptions = {
 let web3ModelInstance;
 if (typeof window !== "undefined") {
   web3ModelInstance = new Web3Modal({
-    network: process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? "mainnet" : "rinkeby",
+    network: process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? "mainnet" : "goerli",//暂时替换成goerli
     cacheProvider: true,
     providerOptions,
   });

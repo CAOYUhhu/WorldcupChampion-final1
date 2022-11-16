@@ -221,7 +221,7 @@ function MintSection() {
         if (fullAddressInStore) {
           
           const { contract } = await connectWallet();
-          const numberMinted = await contract.numberMinted(fullAddressInStore);
+          const numberMinted = await contract.balanceOf(fullAddressInStore);
           setNumberMinted(parseInt(numberMinted));
           updateStatus();
         }
@@ -246,7 +246,7 @@ function MintSection() {
 
   async function refreshStatus() {
     const { contract } = await connectWallet();
-    const numberMinted = await contract.numberMinted(fullAddress);
+    const numberMinted = await contract.balanceOf(fullAddress);
     setNumberMinted(parseInt(numberMinted));
   }
 

@@ -264,7 +264,7 @@ function MintSection() {
     </StyledMintButton>
   );
 
-  if (status === "True") {
+  if (status === "False") {
     mintButton = (
       
       <div>
@@ -289,7 +289,7 @@ function MintSection() {
     );
   }
 
-  if (progress >= 7300 || status === "False") {
+  if (progress >= 7300 || status === "True") {
     mintButton = (
       <StyledMintButton
         style={{

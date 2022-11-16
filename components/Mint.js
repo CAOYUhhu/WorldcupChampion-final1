@@ -98,7 +98,7 @@ const StyledMintButton = styled.div`
 
 function MintButton(props) {
   const [minting, setMinting] = useState(false);
-
+  
   return (
     <StyledMintButton
       disabled={!!props.disabled}
@@ -110,11 +110,18 @@ function MintButton(props) {
         setMinting(true);
         try {
           const { signer, contract } = await connectWallet();
+          
           const contractWithSigner = contract.connect(signer);
-          const value = ethers.utils.parseEther(
-            props.mintAmount === 1 ? "0.1" : "0.2"
-          );
-          const tx = await contractWithSigner.mint(props.mintAmount, {
+          let value
+          if(props.mintAmount === 1){value = ethers.utils.parseEther("0.1")}
+          if(props.mintAmount === 2){value = ethers.utils.parseEther("0.2")}
+          if(props.mintAmount === 3){value = ethers.utils.parseEther("0.3")}
+          if(props.mintAmount === 4){value = ethers.utils.parseEther("0.4")}
+          // const value = ethers.utils.parseEther(
+          //   props.mintAmount === 1 ? "0.1" : "0.2"
+          // );
+          
+          const tx = await contractWithSigner.mint(get("fullAddress"),props.mintAmount, {
             value,
           });
           const response = await tx.wait();
@@ -180,8 +187,9 @@ function MintSection() {
   }
 
   const handleIncrement=()=>{
-    if (mintAmount>=5) return;
+    if (mintAmount>=4) return;
     setmintAmount(mintAmount+1);
+    
   }
 
   async function updateStatus() {
@@ -192,6 +200,7 @@ function MintSection() {
     const progress = parseInt(await contract.totalSupply());
 
     setStatus(status.toString());
+    
     setProgress(progress);
     // 在 mint 事件的时候更新数据
     const onMint = throttle(async () => {
@@ -264,7 +273,89 @@ function MintSection() {
     </StyledMintButton>
   );
 
-  if (status === "False") {
+
+  function MintButton(props) {
+    const [minting, setMinting] = useState(false);
+    
+    return (
+      <StyledMintButton
+        disabled={!!props.disabled}
+        minting={minting}
+        onClick={async () => {
+          if (minting || props.disabled) {
+            return;
+          }
+          setMinting(true);
+          try {
+            const { signer, contract } = await connectWallet();
+            
+            const contractWithSigner = contract.connect(signer);
+            let value
+            if(mintAmount === 1){value = ethers.utils.parseEther("0.1")}
+            if(mintAmount === 2){value = ethers.utils.parseEther("0.2")}
+            if(mintAmount === 3){value = ethers.utils.parseEther("0.3")}
+            if(mintAmount === 4){value = ethers.utils.parseEther("0.4")}
+            // const value = ethers.utils.parseEther(
+            //   props.mintAmount === 1 ? "0.1" : "0.2"
+            // );
+            
+            const tx = await contractWithSigner.mint(get("fullAddress"),mintAmount, {
+              value,
+            });
+            const response = await tx.wait();
+            showMessage({
+              type: "success",
+              title: "Mint Succeded",
+              body: (
+                <div>
+                  <a
+                    href={`https://${ETHERSCAN_DOMAIN}/tx/${response.transactionHash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Transaction Details
+                  </a>{" "}
+                  Or View On Opensea{" "}
+                  <a
+                    href="https://opensea.io/account"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    
+                  </a>
+                  
+                </div>
+              ),
+            });
+          } catch (err) {
+            showMessage({
+              type: "error",
+              title: "铸造失败",
+              body: err.message,
+            });
+          }
+          props.onMinted && props.onMinted();
+          setMinting(false);
+        }}
+        style={{
+          background: 'White',
+          fontWeight: "bold" ,
+          fontSize:'18px',
+          marginTop:'10px',
+          marginLeft:'7px',
+          ...props.style,
+  
+        }}
+      >
+        Mint Now {minting ? "..." : ""}
+      </StyledMintButton>
+    );
+  }
+
+
+
+
+  if (status === "false") {
     mintButton = (
       
       <div>

@@ -300,21 +300,21 @@ function MintSection() {
               }
             }
             if(mintAmount === 2){
-              if (iswhitelisted=true){
+              if (iswhitelisted==true){
                 value = ethers.utils.parseEther("0.1")
               }else{
                 value = ethers.utils.parseEther("0.2")
               }
             }
             if(mintAmount === 3){
-              if (iswhitelisted=true){
+              if (iswhitelisted==true){
                 value = ethers.utils.parseEther("0.2")
               }else{
                 value = ethers.utils.parseEther("0.3")
               }
             }
             if(mintAmount === 4){
-              if (iswhitelisted=true){
+              if (iswhitelisted==true){
                 value = ethers.utils.parseEther("0.3")
               }else{
                 value = ethers.utils.parseEther("0.4")

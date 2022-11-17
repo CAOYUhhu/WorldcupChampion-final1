@@ -96,86 +96,86 @@ const StyledMintButton = styled.div`
   }};
 `;
 
-function MintButton(props) {
-  const [minting, setMinting] = useState(false);
+// function MintButton(props) {
+//   const [minting, setMinting] = useState(false);
   
-  return (
-    <StyledMintButton
-      disabled={!!props.disabled}
-      minting={minting}
-      onClick={async () => {
-        if (minting || props.disabled) {
-          return;
-        }
-        setMinting(true);
-        try {
-          const { signer, contract } = await connectWallet();
+//   return (
+//     <StyledMintButton
+//       disabled={!!props.disabled}
+//       minting={minting}
+//       onClick={async () => {
+//         if (minting || props.disabled) {
+//           return;
+//         }
+//         setMinting(true);
+//         try {
+//           const { signer, contract } = await connectWallet();
           
-          const contractWithSigner = contract.connect(signer);
-          let value
-          if(props.mintAmount === 1){value = ethers.utils.parseEther("0.1")}
-          if(props.mintAmount === 2){value = ethers.utils.parseEther("0.2")}
-          if(props.mintAmount === 3){value = ethers.utils.parseEther("0.3")}
-          if(props.mintAmount === 4){value = ethers.utils.parseEther("0.4")}
-          // const value = ethers.utils.parseEther(
-          //   props.mintAmount === 1 ? "0.1" : "0.2"
-          // );
+//           const contractWithSigner = contract.connect(signer);
+//           let value
+//           if(props.mintAmount === 1){value = ethers.utils.parseEther("0.1")}
+//           if(props.mintAmount === 2){value = ethers.utils.parseEther("0.2")}
+//           if(props.mintAmount === 3){value = ethers.utils.parseEther("0.3")}
+//           if(props.mintAmount === 4){value = ethers.utils.parseEther("0.4")}
+//           // const value = ethers.utils.parseEther(
+//           //   props.mintAmount === 1 ? "0.1" : "0.2"
+//           // );
           
-          const tx = await contractWithSigner.mint(get("fullAddress"),props.mintAmount, {
-            value,
-          });
-          const response = await tx.wait();
-          showMessage({
-            type: "success",
-            title: "Mint Succeded",
-            body: (
-              <div>
-                <a
-                  href={`https://${ETHERSCAN_DOMAIN}/tx/${response.transactionHash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View Transaction Details
-                </a>{" "}
-                Or View On Opensea{" "}
-                <a
-                  href="https://opensea.io/account"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+//           const tx = await contractWithSigner.mint(get("fullAddress"),props.mintAmount, {
+//             value,
+//           });
+//           const response = await tx.wait();
+//           showMessage({
+//             type: "success",
+//             title: "Mint Succeded",
+//             body: (
+//               <div>
+//                 <a
+//                   href={`https://${ETHERSCAN_DOMAIN}/tx/${response.transactionHash}`}
+//                   target="_blank"
+//                   rel="noreferrer"
+//                 >
+//                   View Transaction Details
+//                 </a>{" "}
+//                 Or View On Opensea{" "}
+//                 <a
+//                   href="https://opensea.io/account"
+//                   target="_blank"
+//                   rel="noreferrer"
+//                 >
                   
-                </a>
+//                 </a>
                 
-              </div>
-            ),
-          });
-        } catch (err) {
-          showMessage({
-            type: "error",
-            title: "铸造失败",
-            body: err.message,
-          });
-        }
-        props.onMinted && props.onMinted();
-        setMinting(false);
-      }}
-      style={{
-        background: 'White',
-        fontWeight: "bold" ,
-        fontSize:'18px',
-        marginTop:'10px',
-        marginLeft:'7px',
-        ...props.style,
+//               </div>
+//             ),
+//           });
+//         } catch (err) {
+//           showMessage({
+//             type: "error",
+//             title: "铸造失败",
+//             body: err.message,
+//           });
+//         }
+//         props.onMinted && props.onMinted();
+//         setMinting(false);
+//       }}
+//       style={{
+//         background: 'White',
+//         fontWeight: "bold" ,
+//         fontSize:'18px',
+//         marginTop:'10px',
+//         marginLeft:'7px',
+//         ...props.style,
 
-      }}
-    >
-      Mint Now {minting ? "..." : ""}
-    </StyledMintButton>
-  );
-}
+//       }}
+//     >
+//       Mint Now {minting ? "..." : ""}
+//     </StyledMintButton>
+//   );
+// }
 
 function MintSection() {
-  const [status, setStatus] = useState("False");
+  const [status, setStatus] = useState("false");
   const [progress, setProgress] = useState(null);
   const [fullAddress, setFullAddress] = useState(null);
   const [numberMinted, setNumberMinted] = useState(0);
@@ -291,13 +291,39 @@ function MintSection() {
             
             const contractWithSigner = contract.connect(signer);
             let value
-            if(mintAmount === 1){value = ethers.utils.parseEther("0.1")}
-            if(mintAmount === 2){value = ethers.utils.parseEther("0.2")}
-            if(mintAmount === 3){value = ethers.utils.parseEther("0.3")}
-            if(mintAmount === 4){value = ethers.utils.parseEther("0.4")}
+            const iswhitelisted = await contract.presaleWallets(get("fullAddress"));
+            if(mintAmount === 1){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.0")
+              }else{
+                value = ethers.utils.parseEther("0.1")
+              }
+            }
+            if(mintAmount === 2){
+              if (iswhitelisted=true){
+                value = ethers.utils.parseEther("0.1")
+              }else{
+                value = ethers.utils.parseEther("0.2")
+              }
+            }
+            if(mintAmount === 3){
+              if (iswhitelisted=true){
+                value = ethers.utils.parseEther("0.2")
+              }else{
+                value = ethers.utils.parseEther("0.3")
+              }
+            }
+            if(mintAmount === 4){
+              if (iswhitelisted=true){
+                value = ethers.utils.parseEther("0.3")
+              }else{
+                value = ethers.utils.parseEther("0.4")
+              }
+            }
             // const value = ethers.utils.parseEther(
             //   props.mintAmount === 1 ? "0.1" : "0.2"
             // );
+            
             
             const tx = await contractWithSigner.mint(get("fullAddress"),mintAmount, {
               value,
@@ -330,7 +356,7 @@ function MintSection() {
           } catch (err) {
             showMessage({
               type: "error",
-              title: "铸造失败",
+              title: "Mint Failed",
               body: err.message,
             });
           }

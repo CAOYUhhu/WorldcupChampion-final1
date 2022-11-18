@@ -209,7 +209,7 @@ function MintSection() {
       
       setStatus(status.toString());
       setProgress(progress);
-    }, 7300 - 250);
+    }, 7290);
     contract.on("Transfer", onMint);
   }
 
@@ -406,7 +406,7 @@ function MintSection() {
     );
   }
 
-  if (progress >= 7300 || status === "True") {
+  if (progress >= 7290 || status === "True") {
     mintButton = (
       <StyledMintButton
         style={{
@@ -471,7 +471,7 @@ function MintSection() {
         Your Wallet Address： <ConnectWallet />{" "}
       </div>
       <div style={{ marginTop: 0, fontSize: 20, textAlign: "center",marginBottom: 10,}}>
-        Total Minted：{progress === null ? "Not Connected" : progress} / 7300
+        Total Minted：{progress === null ? "Not Connected" : progress} / 7290
       </div>
 
       {mintButton}
@@ -620,7 +620,7 @@ function Mint() {
           variant="body1"
           gutterBottom
         >
-          Worldcup Champion is a collection of 7300 jersey NFTs unlocking access to 
+          Worldcup Champion is a collection of 7290 jersey NFTs unlocking access to 
             
         </Typography>
         <Typography

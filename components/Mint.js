@@ -187,7 +187,7 @@ function MintSection() {
   }
 
   const handleIncrement=()=>{
-    if (mintAmount>=4) return;
+    if (mintAmount>=10) return;
     setmintAmount(mintAmount+1);
     
   }
@@ -318,6 +318,48 @@ function MintSection() {
                 value = ethers.utils.parseEther("0.3")
               }else{
                 value = ethers.utils.parseEther("0.4")
+              }
+            }
+            if(mintAmount === 5){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.4")
+              }else{
+                value = ethers.utils.parseEther("0.5")
+              }
+            }
+            if(mintAmount === 6){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.5")
+              }else{
+                value = ethers.utils.parseEther("0.6")
+              }
+            }
+            if(mintAmount === 7){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.6")
+              }else{
+                value = ethers.utils.parseEther("0.7")
+              }
+            }
+            if(mintAmount === 8){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.7")
+              }else{
+                value = ethers.utils.parseEther("0.8")
+              }
+            }
+            if(mintAmount === 9){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.8")
+              }else{
+                value = ethers.utils.parseEther("0.9")
+              }
+            }
+            if(mintAmount === 10){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.9")
+              }else{
+                value = ethers.utils.parseEther("1")
               }
             }
             // const value = ethers.utils.parseEther(

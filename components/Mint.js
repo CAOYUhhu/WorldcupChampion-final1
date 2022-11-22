@@ -10,6 +10,7 @@ import React from 'react';
 import { formatUnits } from '@ethersproject/units';
 import "@vetixy/circular-std";
 import 'antd/dist/antd.css'
+import web3e from "web3"
 
 
 import { get, subscribe } from "../store";
@@ -67,7 +68,7 @@ function MenuItem(props) {
 }
 
 const ETHERSCAN_DOMAIN =
-  process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+  process.env.NEXT_PUBLIC_CHAIN_ID === "2"
     ? "etherscan.io"
     : "goerli.etherscan.io"; //暂时替换成goerli
 
@@ -113,83 +114,6 @@ const StyledMintButtonWL = styled.div`
     return props.minting || props.disabled ? 0.6 : 1;
   }};
 `;
-// function MintButton(props) {
-//   const [minting, setMinting] = useState(false);
-  
-//   return (
-//     <StyledMintButton
-//       disabled={!!props.disabled}
-//       minting={minting}
-//       onClick={async () => {
-//         if (minting || props.disabled) {
-//           return;
-//         }
-//         setMinting(true);
-//         try {
-//           const { signer, contract } = await connectWallet();
-          
-//           const contractWithSigner = contract.connect(signer);
-//           let value
-//           if(props.mintAmount === 1){value = ethers.utils.parseEther("0.1")}
-//           if(props.mintAmount === 2){value = ethers.utils.parseEther("0.2")}
-//           if(props.mintAmount === 3){value = ethers.utils.parseEther("0.3")}
-//           if(props.mintAmount === 4){value = ethers.utils.parseEther("0.4")}
-//           // const value = ethers.utils.parseEther(
-//           //   props.mintAmount === 1 ? "0.1" : "0.2"
-//           // );
-          
-//           const tx = await contractWithSigner.mint(get("fullAddress"),props.mintAmount, {
-//             value,
-//           });
-//           const response = await tx.wait();
-//           showMessage({
-//             type: "success",
-//             title: "Mint Succeded",
-//             body: (
-//               <div>
-//                 <a
-//                   href={`https://${ETHERSCAN_DOMAIN}/tx/${response.transactionHash}`}
-//                   target="_blank"
-//                   rel="noreferrer"
-//                 >
-//                   View Transaction Details
-//                 </a>{" "}
-//                 Or View On Opensea{" "}
-//                 <a
-//                   href="https://opensea.io/account"
-//                   target="_blank"
-//                   rel="noreferrer"
-//                 >
-                  
-//                 </a>
-                
-//               </div>
-//             ),
-//           });
-//         } catch (err) {
-//           showMessage({
-//             type: "error",
-//             title: "铸造失败",
-//             body: err.message,
-//           });
-//         }
-//         props.onMinted && props.onMinted();
-//         setMinting(false);
-//       }}
-//       style={{
-//         background: 'White',
-//         fontWeight: "bold" ,
-//         fontSize:'18px',
-//         marginTop:'10px',
-//         marginLeft:'7px',
-//         ...props.style,
-
-//       }}
-//     >
-//       Mint Now {minting ? "..." : ""}
-//     </StyledMintButton>
-//   );
-// }
 
 function MintSection() {
   const [status, setStatus] = useState("false");
@@ -197,6 +121,7 @@ function MintSection() {
   const [fullAddress, setFullAddress] = useState(null);
   const [numberMinted, setNumberMinted] = useState(0);
   const [mintAmount, setmintAmount]=useState(1);
+  const [iswhitelist, setisWhitelist]=useState("false");
   
   const handleDecrement=()=>{
     if (mintAmount<=1) return;
@@ -204,7 +129,7 @@ function MintSection() {
   }
 
   const handleIncrement=()=>{
-    if (mintAmount>=10) return;
+    if (mintAmount>=2000) return;
     setmintAmount(mintAmount+1);
     
   }
@@ -213,7 +138,7 @@ function MintSection() {
     const { contract } = await connectWallet();
  
     
-    const status = await contract.paused();
+    const status = await contract.publicSaleOpen();
     const progress = parseInt(await contract.totalSupply());
 
     setStatus(status.toString());
@@ -221,7 +146,7 @@ function MintSection() {
     setProgress(progress);
     // 在 mint 事件的时候更新数据
     const onMint = throttle(async () => {
-      const status = await contract.paused();
+      const status = await contract.publicSaleOpen();
       const progress = parseInt(await contract.totalSupply());
       
       setStatus(status.toString());
@@ -230,13 +155,23 @@ function MintSection() {
     contract.on("Transfer", onMint);
   }
 
+
+
+  
+
+
   useEffect(() => {
     (async () => {
+      
       const fullAddressInStore = get("fullAddress") || null;
       if (fullAddressInStore) {
         const { contract } = await connectWallet();
-
+       
         const numberMinted = await contract.balanceOf(fullAddressInStore);
+        let iswhitelisted;
+      
+        iswhitelisted=await contract.isWhitelist([web3e.utils.padLeft(fullAddressInStore,64)]);
+        setisWhitelist(iswhitelisted.toString())
         setNumberMinted(parseInt(numberMinted));
         setFullAddress(fullAddressInStore);
       }
@@ -320,83 +255,13 @@ function MintSection() {
             
             const contractWithSigner = contract.connect(signer);
             let value
-            const iswhitelisted = await contract.presaleWallets(get("fullAddress"));
-            if(mintAmount === 1){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.0")
-              }else{
-                value = ethers.utils.parseEther("0.1")
-              }
-            }
-            if(mintAmount === 2){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.1")
-              }else{
-                value = ethers.utils.parseEther("0.2")
-              }
-            }
-            if(mintAmount === 3){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.2")
-              }else{
-                value = ethers.utils.parseEther("0.3")
-              }
-            }
-            if(mintAmount === 4){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.3")
-              }else{
-                value = ethers.utils.parseEther("0.4")
-              }
-            }
-            if(mintAmount === 5){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.4")
-              }else{
-                value = ethers.utils.parseEther("0.5")
-              }
-            }
-            if(mintAmount === 6){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.5")
-              }else{
-                value = ethers.utils.parseEther("0.6")
-              }
-            }
-            if(mintAmount === 7){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.6")
-              }else{
-                value = ethers.utils.parseEther("0.7")
-              }
-            }
-            if(mintAmount === 8){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.7")
-              }else{
-                value = ethers.utils.parseEther("0.8")
-              }
-            }
-            if(mintAmount === 9){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.8")
-              }else{
-                value = ethers.utils.parseEther("0.9")
-              }
-            }
-            if(mintAmount === 10){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.9")
-              }else{
-                value = ethers.utils.parseEther("1")
-              }
-            }
-            // const value = ethers.utils.parseEther(
-            //   props.mintAmount === 1 ? "0.1" : "0.2"
-            // );
+            let value0=mintAmount/10
             
-            
-            const tx = await contractWithSigner.mint(get("fullAddress"),mintAmount, {
+              
+            value = ethers.utils.parseEther(value0.toString())
+              
+          
+            const tx = await contractWithSigner.mint(mintAmount, {
               value,
             });
             const response = await tx.wait();
@@ -466,83 +331,14 @@ function MintSection() {
             
             const contractWithSigner = contract.connect(signer);
             let value
-            const iswhitelisted = await contract.presaleWallets(get("fullAddress"));
-            if(mintAmount === 1){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.0")
-              }else{
-                value = ethers.utils.parseEther("0.1")
-              }
-            }
-            if(mintAmount === 2){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.1")
-              }else{
-                value = ethers.utils.parseEther("0.2")
-              }
-            }
-            if(mintAmount === 3){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.2")
-              }else{
-                value = ethers.utils.parseEther("0.3")
-              }
-            }
-            if(mintAmount === 4){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.3")
-              }else{
-                value = ethers.utils.parseEther("0.4")
-              }
-            }
-            if(mintAmount === 5){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.4")
-              }else{
-                value = ethers.utils.parseEther("0.5")
-              }
-            }
-            if(mintAmount === 6){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.5")
-              }else{
-                value = ethers.utils.parseEther("0.6")
-              }
-            }
-            if(mintAmount === 7){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.6")
-              }else{
-                value = ethers.utils.parseEther("0.7")
-              }
-            }
-            if(mintAmount === 8){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.7")
-              }else{
-                value = ethers.utils.parseEther("0.8")
-              }
-            }
-            if(mintAmount === 9){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.8")
-              }else{
-                value = ethers.utils.parseEther("0.9")
-              }
-            }
-            if(mintAmount === 10){
-              if (iswhitelisted==true){
-                value = ethers.utils.parseEther("0.9")
-              }else{
-                value = ethers.utils.parseEther("1")
-              }
-            }
-            // const value = ethers.utils.parseEther(
-            //   props.mintAmount === 1 ? "0.1" : "0.2"
-            // );
             
-            //-----------------------------------------------------------------------------------
-            const tx = await contractWithSigner.mint(get("fullAddress"),mintAmount, {
+            
+              
+            value = ethers.utils.parseEther("0.0")
+             
+            
+           
+            const tx = await contractWithSigner.whitelistMint(1, {
               value,
             });
             const response = await tx.wait();
@@ -595,8 +391,8 @@ function MintSection() {
     );
   }
 
-
-  if (status === "false") {
+  
+  if (status === "true" && iswhitelist === "true") {
     mintButton = (
       
       <div>
@@ -626,7 +422,83 @@ function MintSection() {
     );
   }
 
-  if (progress >= 7290 || status === "True") {
+
+ 
+  if ( status === "true" && iswhitelist === "false") {
+    mintButton = (
+      
+      <div>
+        <div style={{textAlign:'center'}}>
+          <Button type="primary" shape="circle" onClick={handleDecrement} style={{height: "40px",width:'40px',fontSize:'20px'}}>
+            -
+          </Button>
+          <Input  value={mintAmount} style={{fontSize:'20px',width:'50px',height: "40px",textAlign:'center',marginLeft:'10px',marginRight:'10px'}}/>
+          <Button type="primary" shape="circle" onClick={handleIncrement} style={{height: "40px",width:'40px',fontSize:'20px'}}>
+            +
+          </Button>
+          
+        </div>
+        <MintButton
+            onMinted={refreshStatus}
+            mintAmount={1}
+            style={{ marginRight: "20px" }}
+          />
+        <StyledMintButtonWL
+          style={{
+            background: "#eee",
+            color: "#999",
+            cursor: "not-allowed",
+            width:'300px',
+            fontSize: "20px"
+          }}
+        >
+          You Are Not Whitelisted
+        </StyledMintButtonWL>
+      </div>
+    );
+  }
+
+
+
+
+
+
+  if (status === "true" && iswhitelist === "true" && numberMinted === 1) {
+    mintButton = (
+      <div>
+        <div style={{textAlign:'center'}}>
+          <Button type="primary" shape="circle" onClick={handleDecrement} style={{height: "40px",width:'40px',fontSize:'20px'}}>
+            -
+          </Button>
+          <Input  value={mintAmount} style={{fontSize:'20px',width:'50px',height: "40px",textAlign:'center',marginLeft:'10px',marginRight:'10px'}}/>
+          <Button type="primary" shape="circle" onClick={handleIncrement} style={{height: "40px",width:'40px',fontSize:'20px'}}>
+            +
+          </Button>
+          
+        </div>
+        <MintButton
+            onMinted={refreshStatus}
+            mintAmount={1}
+            style={{ marginRight: "20px" }}
+          />
+        <StyledMintButtonWL
+          style={{
+            background: "#eee",
+            color: "#999",
+            cursor: "not-allowed",
+            width:'300px',
+            fontSize: "20px"
+          }}
+        >
+          You Have Minted Already
+        </StyledMintButtonWL>
+      </div>
+    );
+  }
+
+
+
+  if (progress >= 7290 ) {
     mintButton = (
       <div>
         <StyledMintButton
@@ -640,24 +512,14 @@ function MintSection() {
         >
           Minted Out
         </StyledMintButton>
-        <StyledMintButtonWL
-          style={{
-            background: "#eee",
-            color: "#999",
-            cursor: "not-allowed",
-            width:'200px',
-            fontSize: "20px"
-          }}
-        >
-          Minted Out
-        </StyledMintButtonWL>
+        
       </div>
       
       
     );
   }
 
-  if (numberMinted === 10) {
+  if (status === "false"  ) {
     mintButton = (
       <div>
         <StyledMintButton
@@ -665,24 +527,16 @@ function MintSection() {
             background: "#eee",
             color: "#999",
             cursor: "not-allowed",
-            width:'300px',
+            width:'200px',
             fontSize: "20px"
           }}
         >
-          You Have Minted Already
+          Not Started
         </StyledMintButton>
-        <StyledMintButtonWL
-          style={{
-            background: "#eee",
-            color: "#999",
-            cursor: "not-allowed",
-            width:'300px',
-            fontSize: "20px"
-          }}
-        >
-          You Have Minted Already
-        </StyledMintButtonWL>
+        
       </div>
+      
+      
     );
   }
 
@@ -719,7 +573,7 @@ function MintSection() {
         Your Wallet Address： <ConnectWallet />{" "}
       </div>
       <div style={{ marginTop: 0, fontSize: 20, textAlign: "center",marginBottom: 10,}}>
-        Total Minted：{progress === null ? "Not Connected" : progress} / 7290
+        Total Minted：{progress === null ? "Not Connected" : progress+500} / 7290
       </div>
 
       {mintButton}

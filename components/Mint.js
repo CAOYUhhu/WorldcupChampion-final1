@@ -96,6 +96,23 @@ const StyledMintButton = styled.div`
   }};
 `;
 
+
+const StyledMintButtonWL = styled.div`
+  display: inline-block;
+  width: 180px;
+  text-align: center;
+  padding: 10px 10px;
+  border: 2px solid #000;
+  border-radius: 40px;
+  color: black;
+  background: #000;
+  cursor: ${(props) => {
+    return props.minting || props.disabled ? "not-allowed" : "pointer";
+  }};
+  opacity: ${(props) => {
+    return props.minting || props.disabled ? 0.6 : 1;
+  }};
+`;
 // function MintButton(props) {
 //   const [minting, setMinting] = useState(false);
   
@@ -272,7 +289,19 @@ function MintSection() {
       Not Started
     </StyledMintButton>
   );
-
+  let mintButtonWL = (
+    <StyledMintButtonWL
+      style={{
+        background: "#eee",
+        color: "#999",
+        cursor: "not-allowed",
+        width:'200px',
+        fontSize: "20px"
+      }}
+    >
+      Not Started
+    </StyledMintButtonWL>
+  );
 
   function MintButton(props) {
     const [minting, setMinting] = useState(false);
@@ -415,19 +444,163 @@ function MintSection() {
   
         }}
       >
-        Mint Now {minting ? "..." : ""}
+        Public Mint {minting ? "..." : ""}
       </StyledMintButton>
     );
   }
 
-
+  function MintButtonWL(props) {
+    const [minting, setMinting] = useState(false);
+    
+    return (
+      <StyledMintButtonWL
+        disabled={!!props.disabled}
+        minting={minting}
+        onClick={async () => {
+          if (minting || props.disabled) {
+            return;
+          }
+          setMinting(true);
+          try {
+            const { signer, contract } = await connectWallet();
+            
+            const contractWithSigner = contract.connect(signer);
+            let value
+            const iswhitelisted = await contract.presaleWallets(get("fullAddress"));
+            if(mintAmount === 1){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.0")
+              }else{
+                value = ethers.utils.parseEther("0.1")
+              }
+            }
+            if(mintAmount === 2){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.1")
+              }else{
+                value = ethers.utils.parseEther("0.2")
+              }
+            }
+            if(mintAmount === 3){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.2")
+              }else{
+                value = ethers.utils.parseEther("0.3")
+              }
+            }
+            if(mintAmount === 4){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.3")
+              }else{
+                value = ethers.utils.parseEther("0.4")
+              }
+            }
+            if(mintAmount === 5){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.4")
+              }else{
+                value = ethers.utils.parseEther("0.5")
+              }
+            }
+            if(mintAmount === 6){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.5")
+              }else{
+                value = ethers.utils.parseEther("0.6")
+              }
+            }
+            if(mintAmount === 7){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.6")
+              }else{
+                value = ethers.utils.parseEther("0.7")
+              }
+            }
+            if(mintAmount === 8){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.7")
+              }else{
+                value = ethers.utils.parseEther("0.8")
+              }
+            }
+            if(mintAmount === 9){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.8")
+              }else{
+                value = ethers.utils.parseEther("0.9")
+              }
+            }
+            if(mintAmount === 10){
+              if (iswhitelisted==true){
+                value = ethers.utils.parseEther("0.9")
+              }else{
+                value = ethers.utils.parseEther("1")
+              }
+            }
+            // const value = ethers.utils.parseEther(
+            //   props.mintAmount === 1 ? "0.1" : "0.2"
+            // );
+            
+            //-----------------------------------------------------------------------------------
+            const tx = await contractWithSigner.mint(get("fullAddress"),mintAmount, {
+              value,
+            });
+            const response = await tx.wait();
+            showMessage({
+              type: "success",
+              title: "Mint Succeded",
+              body: (
+                <div>
+                  <a
+                    href={`https://${ETHERSCAN_DOMAIN}/tx/${response.transactionHash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Transaction Details
+                  </a>{" "}
+                  Or View On Opensea{" "}
+                  <a
+                    href="https://opensea.io/account"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    
+                  </a>
+                  
+                </div>
+              ),
+            });
+          } catch (err) {
+            showMessage({
+              type: "error",
+              title: "Mint Failed",
+              body: err.message,
+            });
+          }
+          props.onMinted && props.onMinted();
+          setMinting(false);
+        }}
+        style={{
+          background: 'White',
+          fontWeight: "bold" ,
+          fontSize:'18px',
+          marginTop:'10px',
+          marginLeft:'7px',
+          ...props.style,
+  
+        }}
+      >
+        WhiteList Mint {minting ? "..." : ""}
+      </StyledMintButtonWL>
+    );
+  }
 
 
   if (status === "false") {
     mintButton = (
       
       <div>
-        <div>
+        <div style={{textAlign:'center'}}>
           <Button type="primary" shape="circle" onClick={handleDecrement} style={{height: "40px",width:'40px',fontSize:'20px'}}>
             -
           </Button>
@@ -443,6 +616,11 @@ function MintSection() {
             mintAmount={1}
             style={{ marginRight: "20px" }}
           />
+          <MintButtonWL
+            onMinted={refreshStatus}
+            mintAmount={1}
+            style={{ marginRight: "20px" }}
+          />
         </div>
       </div>
     );
@@ -450,33 +628,61 @@ function MintSection() {
 
   if (progress >= 7290 || status === "True") {
     mintButton = (
-      <StyledMintButton
-        style={{
-          background: "#eee",
-          color: "#999",
-          cursor: "not-allowed",
-          width:'200px',
-          fontSize: "20px"
-        }}
-      >
-        Minted Out
-      </StyledMintButton>
+      <div>
+        <StyledMintButton
+          style={{
+            background: "#eee",
+            color: "#999",
+            cursor: "not-allowed",
+            width:'200px',
+            fontSize: "20px"
+          }}
+        >
+          Minted Out
+        </StyledMintButton>
+        <StyledMintButtonWL
+          style={{
+            background: "#eee",
+            color: "#999",
+            cursor: "not-allowed",
+            width:'200px',
+            fontSize: "20px"
+          }}
+        >
+          Minted Out
+        </StyledMintButtonWL>
+      </div>
+      
+      
     );
   }
 
-  if (numberMinted === 4) {
+  if (numberMinted === 10) {
     mintButton = (
-      <StyledMintButton
-        style={{
-          background: "#eee",
-          color: "#999",
-          cursor: "not-allowed",
-          width:'300px',
-          fontSize: "20px"
-        }}
-      >
-        You Have Minted Already
-      </StyledMintButton>
+      <div>
+        <StyledMintButton
+          style={{
+            background: "#eee",
+            color: "#999",
+            cursor: "not-allowed",
+            width:'300px',
+            fontSize: "20px"
+          }}
+        >
+          You Have Minted Already
+        </StyledMintButton>
+        <StyledMintButtonWL
+          style={{
+            background: "#eee",
+            color: "#999",
+            cursor: "not-allowed",
+            width:'300px',
+            fontSize: "20px"
+          }}
+        >
+          You Have Minted Already
+        </StyledMintButtonWL>
+      </div>
     );
   }
 
@@ -535,7 +741,7 @@ function Jackpot() {
   setInterval(()=>{
     try{
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      provider.getBalance('0xF4ec364012Ef8db931b470Ec931F0d3f02D0a994').then((value)=>{
+      provider.getBalance('0x66444706673D0872289039A35d1EC6539F83817C').then((value)=>{
         oldbalance=newbalance
         newbalance=Number(formatUnits(value.toString(), 18)).toPrecision(2)
       })

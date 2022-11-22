@@ -276,14 +276,15 @@ function MintSection() {
                     rel="noreferrer"
                   >
                     View Transaction Details
-                  </a>{" "}
-                  Or View On Opensea{" "}
+                  </a>
+                  {" "}
+                  
                   <a
                     href="https://opensea.io/account"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    
+                    Or View On Opensea
                   </a>
                   
                 </div>
@@ -354,13 +355,13 @@ function MintSection() {
                   >
                     View Transaction Details
                   </a>{" "}
-                  Or View On Opensea{" "}
+                  
                   <a
                     href="https://opensea.io/account"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    
+                    Or View On Opensea{" "}
                   </a>
                   
                 </div>
@@ -432,7 +433,7 @@ function MintSection() {
           <Button type="primary" shape="circle" onClick={handleDecrement} style={{height: "40px",width:'40px',fontSize:'20px'}}>
             -
           </Button>
-          <Input  value={mintAmount} style={{fontSize:'20px',width:'50px',height: "40px",textAlign:'center',marginLeft:'10px',marginRight:'10px'}}/>
+          <Input  value={mintAmount} onChange={(e)=>{setmintAmount(parseInt(e.target.value))}} style={{fontSize:'20px',width:'50px',height: "40px",textAlign:'center',marginLeft:'10px',marginRight:'10px'}}/>
           <Button type="primary" shape="circle" onClick={handleIncrement} style={{height: "40px",width:'40px',fontSize:'20px'}}>
             +
           </Button>

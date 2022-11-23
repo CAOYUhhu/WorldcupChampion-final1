@@ -68,7 +68,7 @@ function MenuItem(props) {
 }
 
 const ETHERSCAN_DOMAIN =
-  process.env.NEXT_PUBLIC_CHAIN_ID === "2"
+  process.env.NEXT_PUBLIC_CHAIN_ID === "1"
     ? "etherscan.io"
     : "goerli.etherscan.io"; //暂时替换成goerli
 
@@ -596,7 +596,7 @@ function Jackpot() {
   setInterval(()=>{
     try{
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      provider.getBalance('0x66444706673D0872289039A35d1EC6539F83817C').then((value)=>{
+      provider.getBalance('0x349D8985DC157B2EAf4bee9C9ed3c03AD960a79B').then((value)=>{
         oldbalance=newbalance
         newbalance=Number(formatUnits(value.toString(), 18)).toPrecision(2)
       })

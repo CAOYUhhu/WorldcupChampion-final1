@@ -280,7 +280,7 @@ function MintSection() {
                   {" "}
                   
                   <a
-                    href="https://opensea.io/account"
+                    href="https://opensea.io/collection/worldcupchampion"
                     target="_blank"
                     rel="noreferrer"
                   >

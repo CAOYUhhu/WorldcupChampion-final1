@@ -605,7 +605,7 @@ function Jackpot() {
       setBalancee(newbalance)
     }
   }
-  ,5000)
+  ,1000)
   
   
   

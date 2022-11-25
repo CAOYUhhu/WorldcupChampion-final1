@@ -596,7 +596,7 @@ function Jackpot() {
   setInterval(()=>{
     try{
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      provider.getBalance('0x349D8985DC157B2EAf4bee9C9ed3c03AD960a79B').then((value)=>{
+      provider.getBalance('0x66a347149fb81c38ec190a6a5bc1d2e207e0cad1').then((value)=>{
         oldbalance=newbalance
         newbalance=Number(formatUnits(value.toString(), 18)).toPrecision(2)
       })

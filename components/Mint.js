@@ -140,7 +140,7 @@ function MintSection() {
     
     const status = await contract.publicSaleOpen();
     const progress = parseInt(await contract.totalSupply());
-
+    console.log(progress)
     setStatus(status.toString());
     
     setProgress(progress);

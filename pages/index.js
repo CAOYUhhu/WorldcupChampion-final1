@@ -15,7 +15,7 @@ export default function Home() {
       <Typography className='ty1'>
         
         <img src='/icons/spin.avif' className='rotate-center'></img>
-        <img src='/icons/back.jpg' className='back-insert'></img>
+        <img src='/icons/back.avif' className='back-insert'></img>
         <Mint />
 
       </Typography>

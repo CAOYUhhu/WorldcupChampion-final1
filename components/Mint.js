@@ -574,7 +574,7 @@ function MintSection() {
         Your Wallet Address： <ConnectWallet />{" "}
       </div>
       <div style={{ marginTop: 0, fontSize: 20, textAlign: "center",marginBottom: 10,}}>
-        Total Minted：{progress === null ? "Not Connected" : progress+500} / 7290
+        Total Minted：{progress === null ? "Not Connected" : progress} / 6790
       </div>
 
       {mintButton}
@@ -596,7 +596,7 @@ function Jackpot() {
   setInterval(()=>{
     try{
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      provider.getBalance('0x66a347149fb81c38ec190a6a5bc1d2e207e0cad1').then((value)=>{
+      provider.getBalance('0x6a7C8C04792B0f6455Dc77f0DcC9977F4C79dbbF').then((value)=>{
         oldbalance=newbalance
         newbalance=Number(formatUnits(value.toString(), 18)).toPrecision(2)
       })

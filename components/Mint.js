@@ -135,7 +135,7 @@ function MintSection() {
     
   }
 
-  function updateStatus() {
+  async function updateStatus() {
     const { contract } = await connectWallet();
  
     
@@ -589,7 +589,7 @@ function MintSection() {
 }
 
 
-async function Jackpot() {
+function Jackpot() {
   
   const [balance, setBalancee] = useState(0);
   const [balance2, setBalancee2] = useState(0);

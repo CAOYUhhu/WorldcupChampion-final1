@@ -135,7 +135,7 @@ function MintSection() {
     
   }
 
-  async function updateStatus() {
+  function updateStatus() {
     const { contract } = await connectWallet();
  
     
@@ -629,13 +629,7 @@ async function Jackpot() {
       setBalancee2(newbalance2)
 
     }
-    // if (newbalance2+newbalance!==oldbalance2+oldbalance){
-    //   webhookClient.send(
-    //   'ETH'
-        
-    //   )
 
-    // }
   }
   ,1000)
   

@@ -19,6 +19,8 @@
     "@vetixy/circular-std": "^1.0.0",
     "@walletconnect/web3-provider": "^1.7.1",
     "antd": "^4.23.2",
+    "config.json": "^0.0.4",
+    "discord.js": "^14.7.0",
     "dotenv": "^16.0.2",
     "erc721a": "^3.0.0",
     "ethers": "^5.5.4",

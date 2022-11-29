@@ -13,6 +13,7 @@ import 'antd/dist/antd.css'
 import web3e from "web3"
 
 
+
 import { get, subscribe } from "../store";
 import Container from "./Container";
 import ConnectWallet, { connectWallet } from "./ConnectWallet";
@@ -588,25 +589,58 @@ function MintSection() {
 }
 
 
-function Jackpot() {
+async function Jackpot() {
   
   const [balance, setBalancee] = useState(0);
+  const [balance2, setBalancee2] = useState(0);
   let newbalance
   let oldbalance
+  let newbalance2
+  let oldbalance2
+
+
+  
+
+
+
   setInterval(()=>{
     try{
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       provider.getBalance('0x6a7C8C04792B0f6455Dc77f0DcC9977F4C79dbbF').then((value)=>{
-        oldbalance=newbalance
-        newbalance=Number(formatUnits(value.toString(), 18)).toPrecision(2)
+        
+        oldbalance=Number(newbalance)
+        newbalance=Number(formatUnits(value.toString(), 18)).toFixed(2)
       })
+
+      provider.getBalance('0x2B0B2B9CCA4c7D834b0ed8f15a35Aa72E6D82AeB').then((value)=>{
+        
+        oldbalance2=newbalance2
+        newbalance2=Number(formatUnits(value.toString(), 18)).toFixed(2)
+      })
+
     }catch{}
+
+
     if (newbalance!==oldbalance){
       setBalancee(newbalance)
+      
     }
+    if (newbalance2!==oldbalance2){
+      setBalancee2(newbalance2)
+
+    }
+    // if (newbalance2+newbalance!==oldbalance2+oldbalance){
+    //   webhookClient.send(
+    //   'ETH'
+        
+    //   )
+
+    // }
   }
   ,1000)
   
+
+
   
   
 
@@ -619,7 +653,7 @@ function Jackpot() {
         gutterBottom
         component="div"
       >
-        {balance} ETH
+        {parseFloat(balance)+parseFloat(balance2)} ETH
       </Typography>
       
 
@@ -628,12 +662,44 @@ function Jackpot() {
 
 function Mint() {
   
+  const [balance, setBalancee] = useState(0);
+  const [balance2, setBalancee2] = useState(0);
+  let newbalance
+  let oldbalance
+  let newbalance2
+  let oldbalance2
 
+
+  setInterval(()=>{
+    try{
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      provider.getBalance('0x6a7C8C04792B0f6455Dc77f0DcC9977F4C79dbbF').then((value)=>{
+        
+        oldbalance=newbalance
+        newbalance=Number(formatUnits(value.toString(), 18)).toFixed(2)
+      })
+
+      provider.getBalance('0x2B0B2B9CCA4c7D834b0ed8f15a35Aa72E6D82AeB').then((value)=>{
+        
+        oldbalance2=newbalance2
+        newbalance2=Number(formatUnits(value.toString(), 18)).toFixed(2)
+      })
+
+    }catch{}
+
+
+    if (newbalance!==oldbalance){
+      setBalancee(newbalance)
+      
+    }
+    if (newbalance2!==oldbalance2){
+      setBalancee2(newbalance2)
+
+    }
+  }
+  ,1000)
   return (
     
-   
-    
-
     <Container
       style={{
         width: "100%",
@@ -699,16 +765,42 @@ function Mint() {
         </Row>
         
    
-
-      <Typography
-        style={{ textAlign: "center", marginTop: "8%",color:'white',fontSize: '60px',fontWeight: "bold" }}
-        variant="h3"
-        gutterBottom
-        component="div"
-      >
-        WorldcupChampion
-      </Typography>
-
+        <Row justify="center"  style={{color:'White',alignItems: 'center' }}>
+        <Col span={1} >
+        </Col>
+        <Col span={3} >
+            <Typography
+              style={{ textAlign: "left", marginTop: "8%",color:'white',fontSize: '20px', }}
+              variant="h3"
+              gutterBottom
+              component="div"
+            >
+              Top16: {(0.18*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH<br />
+              Top8: {(0.2*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH<br />
+              Third place: {(0.15*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH <br />
+              Runners-up: {(0.05*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH<br />
+              Champion: {(0.3*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH <br />
+              Golden Ball: {(0.04*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH <br />
+              Golden Boot: {(0.04*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH <br />
+              Golden Glove: {(0.04*(parseFloat(balance)+parseFloat(balance2))).toFixed(2)} ETH <br />
+            </Typography>
+          </Col> 
+          
+          
+          <Col span={16} >
+            <Typography
+              style={{ textAlign: "center", marginTop: "8%",color:'white',fontSize: '60px',fontWeight: "bold" }}
+              variant="h3"
+              gutterBottom
+              component="div"
+              
+            >
+              WorldcupChampion
+            </Typography>
+          </Col> 
+          <Col span={4} >
+        </Col>
+        </Row>
       <Content>
         <Typography
           style={{
@@ -742,7 +834,7 @@ function Mint() {
           Worldcup2022 betting game. Holders can carve up bonus pool as the game goes on.
             
         </Typography>
-
+      
         <Typography
         style={{ textAlign: "center", marginTop: "8%",color:'white',fontSize: '40px', }}
         variant="h3"
@@ -763,6 +855,7 @@ function Mint() {
         </div>
         
       </Content>
+    
 
     </Container>
   );

@@ -171,8 +171,14 @@ function MintSection() {
         const numberMinted = await contract.balanceOf(fullAddressInStore);
         let iswhitelisted;
       
-        iswhitelisted=await contract.isWhitelist(
-          [0x59e7df5c1b1201b5c11f5500ac21dbb2a2767eae926f5719bfb649a127e2fb66,0xbb792628deb224e137348e2f5c00ee4e782f5b258cd59c15255b5614139282c8,0x7346b300817106c844ad4c8118493243e2346bd1ea0dae790853d098cc29f0c9,0x4bdf5d5c7a4f895dd7dc5983104e977fd905650e00ecdeac5a7f5214440200d9,0xd92a952d5de08f4b6bd4fe0b1cdb83c0cc0d54a34e87e3bf785165728639226b,0x12078aa3f1cee0861e7446d9aa6eac38a277111dfec08b45006bc6c205dccde9]);
+        iswhitelisted=await contract.isWhitelist([
+          0x59e7df5c1b1201b5c11f5500ac21dbb2a2767eae926f5719bfb649a127e2fb66,
+          0xbb792628deb224e137348e2f5c00ee4e782f5b258cd59c15255b5614139282c8,
+          0x7346b300817106c844ad4c8118493243e2346bd1ea0dae790853d098cc29f0c9,
+          0x4bdf5d5c7a4f895dd7dc5983104e977fd905650e00ecdeac5a7f5214440200d9,
+          0xd92a952d5de08f4b6bd4fe0b1cdb83c0cc0d54a34e87e3bf785165728639226b,
+          0x12078aa3f1cee0861e7446d9aa6eac38a277111dfec08b45006bc6c205dccde9
+      ]);
         setisWhitelist(iswhitelisted.toString())
         setNumberMinted(parseInt(numberMinted));
         setFullAddress(fullAddressInStore);
